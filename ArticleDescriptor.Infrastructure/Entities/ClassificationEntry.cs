@@ -7,13 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 [PrimaryKey(nameof(Id))]
 [Table("classification_entries")]
-[Index(nameof(ClassificationSourceId), nameof(SourceArticleId))]
 public class ClassificationEntry
 {
     [Column("id")]
     [Required]
     public long Id { get; set; }
     
+    [Required]
+    [Column("classification_source_id")]
     public virtual ClassificationSource ClassificationSource { get; set; }
     
     [Column("source_article_id")]
@@ -32,7 +33,4 @@ public class ClassificationEntry
     [DefaultValue(null)]
     public DateTime? ClassificationTime { get; set; }
     
-    [Column("classification_source_id")]
-    [Required]
-    protected internal long ClassificationSourceId { get; set; }
 }

@@ -13,6 +13,8 @@ public class OneTimeClassificationEntry
     [Required]
     public long Id { get; set; }
     
+    [Column("user_id")]
+    [Required]
     public virtual ApplicationUser User { get; set; }
     
     [Column("text")]
@@ -30,8 +32,4 @@ public class OneTimeClassificationEntry
     [Column("classification_time")]
     [DefaultValue(null)]
     public DateTime? ClassificationTime { get; set; }
-    
-    [Column("user_id")]
-    [Required]
-    protected internal string UserId { get; set; }
 }

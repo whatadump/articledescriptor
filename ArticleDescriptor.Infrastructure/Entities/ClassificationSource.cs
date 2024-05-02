@@ -20,11 +20,9 @@ public class ClassificationSource
     [Required]
     public string RssSource { get; set; }
     
+    [Column("user_id")]
+    [Required]
     public virtual ApplicationUser User { get; set; }
     
     public virtual ICollection<ClassificationEntry> Entries { get; }
-    
-    [Column("user_id")]
-    [Required]
-    protected internal string UserId { get; set; }
 }
