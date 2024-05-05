@@ -1,18 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Infrastructure", "ArticleDescriptor.Infrastructure\ArticleDescriptor.Infrastructure.csproj", "{052B3B56-CCDF-4D59-B76B-3E881BE6074E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Infrastructure", "src\ArticleDescriptor.Infrastructure\ArticleDescriptor.Infrastructure.csproj", "{052B3B56-CCDF-4D59-B76B-3E881BE6074E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Domain", "ArticleDescriptor.Domain\ArticleDescriptor.Domain.csproj", "{28317AF8-FA14-45EB-AD2A-86E4AC9740BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Domain", "src\ArticleDescriptor.Domain\ArticleDescriptor.Domain.csproj", "{28317AF8-FA14-45EB-AD2A-86E4AC9740BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Application", "ArticleDescriptor.Application\ArticleDescriptor.Application.csproj", "{656C0859-0E5A-4B87-9740-67FE67795FE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Application", "src\ArticleDescriptor.Application\ArticleDescriptor.Application.csproj", "{656C0859-0E5A-4B87-9740-67FE67795FE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Web", "ArticleDescriptor.Web\ArticleDescriptor.Web.csproj", "{3A561EFF-CACD-4ADA-9589-9B315FAE1DB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Web", "src\ArticleDescriptor.Web\ArticleDescriptor.Web.csproj", "{3A561EFF-CACD-4ADA-9589-9B315FAE1DB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Web.Client", "ArticleDescriptor.Web.Client\ArticleDescriptor.Web.Client.csproj", "{C99A8BC6-9E0B-4CC1-898C-092A8D35B3D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Web.Client", "src\ArticleDescriptor.Web.Client\ArticleDescriptor.Web.Client.csproj", "{C99A8BC6-9E0B-4CC1-898C-092A8D35B3D0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{EFF8CFF5-8B78-48D7-97D0-13225FE905FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Migrations", "ArticleDescriptor.Migrations\ArticleDescriptor.Migrations.csproj", "{C6727B2F-6FFE-4D73-9EE1-11F45ABE74CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleDescriptor.Migrations", "src\ArticleDescriptor.Migrations\ArticleDescriptor.Migrations.csproj", "{C6727B2F-6FFE-4D73-9EE1-11F45ABE74CE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{45E7FE2C-B907-4263-8D19-59141A3A6EC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,5 +52,8 @@ Global
 		{28317AF8-FA14-45EB-AD2A-86E4AC9740BF} = {EFF8CFF5-8B78-48D7-97D0-13225FE905FF}
 		{052B3B56-CCDF-4D59-B76B-3E881BE6074E} = {EFF8CFF5-8B78-48D7-97D0-13225FE905FF}
 		{C6727B2F-6FFE-4D73-9EE1-11F45ABE74CE} = {EFF8CFF5-8B78-48D7-97D0-13225FE905FF}
+		{EFF8CFF5-8B78-48D7-97D0-13225FE905FF} = {45E7FE2C-B907-4263-8D19-59141A3A6EC3}
+		{3A561EFF-CACD-4ADA-9589-9B315FAE1DB9} = {45E7FE2C-B907-4263-8D19-59141A3A6EC3}
+		{C99A8BC6-9E0B-4CC1-898C-092A8D35B3D0} = {45E7FE2C-B907-4263-8D19-59141A3A6EC3}
 	EndGlobalSection
 EndGlobal
