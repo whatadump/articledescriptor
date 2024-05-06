@@ -1,0 +1,143 @@
+﻿@page "/me/feeds/{id}"
+@using Microsoft.AspNetCore.Authorization
+@using ArticleDescriptor.Infrastructure.Interfaces
+@using ArticleDescriptor.Infrastructure
+@using ArticleDescriptor.Infrastructure.Enums
+@using ArticleDescriptor.Infrastructure.Utils
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize]
+
+@inject IFeedService FeedService
+@inject UserManager UserManager
+@inject IClassificationService ClassificationService
+@inject IDialogService DialogService
+@inject ApplicationDbContext Context
+@inject ISnackbar Snackbar
+<PageTitle>Мои ленты</PageTitle>
+
+<MudDrawerContainer Class="mt-7">
+    @if (_feed is null)
+    {
+        <MudText Typo="Typo.h4">Лента не найдена 😞</MudText>
+    }
+    else
+    {
+        <MudGrid>
+            <MudItem xs="12" md="4">
+                <MudCard>
+                    <MudCardContent>
+                        <MudText Typo="Typo.h5">Лента @(_feed != null ? $"\"{_feed.Name}\"" : "")</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudChip>@_user.RealName</MudChip>
+                        <MudSpacer/>
+                        <MudButton OnClick="@LoadEntries" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Download">Загрузить статьи</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="12" md="8">
+                <MudCard>
+                    <MudCardContent>
+                        <MudTable T="FeedEntry" Items="_entries" Loading="_loading">
+                            <HeaderContent>
+                                <MudTh>
+                                    Название статьи
+                                </MudTh>
+                                <MudTh Style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                    Ссылка на статью
+                                </MudTh>
+                                <MudTh>
+                                    Статус
+                                </MudTh>
+                                <MudTh>
+                                    Результат распознавания
+                                </MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd>
+                                    @context.Title
+                                </MudTd>
+                                <MudTd Style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                    @context.SourceArticleId
+                                </MudTd>
+                                <MudTd>
+                                    <MudChip>@_statuses[@context.Id].GetMemberName()</MudChip>
+                                </MudTd>
+                                <MudTd>
+                                    @if (context is { ClassificationCompleted: true, ClassificationResult: not null })
+                                    {
+                                        <MudChip>@context.ClassificationResult.Value.GetMemberName() ?? ""</MudChip>
+                                    }
+                                </MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    }
+</MudDrawerContainer>
+
+@code {
+    
+    [Parameter]
+    public string? id { get; set; }
+    
+    private FeedSource? _feed { get; set; }
+    
+    private ApplicationUser _user { get; set; }
+
+    private ICollection<FeedEntry> _entries { get; set; }
+
+    private Dictionary<long, ClassificationStatus> _statuses;
+
+    private bool _loading;
+    
+    private async Task UpdateData()
+    {
+        _loading = true;
+        _entries = await FeedService.GetExistingFeedEntries(_feed);
+        _statuses = _entries.ToDictionary(x => x.Id, x => ClassificationService.GetClassificationStatus(x));
+        _loading = false;
+        StateHasChanged();
+    }
+    
+    private async Task LoadEntries()
+    {
+        var entriesCount = (await FeedService.LoadEntriesForFeed(_feed)).Count;
+        if (entriesCount > 0)
+        {
+            Snackbar.Add($"Подгружено {entriesCount} записей для данной ленты", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("У данной ленты нет новых записей", Severity.Warning);
+        }
+
+        await UpdateData();
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _user = await UserManager.GetAuthenticatedUserAsync();
+            if (int.TryParse(id ?? "one", out var value))
+            {
+                var feed = await Context
+                    .FeedSources
+                    .Include(feedSource => feedSource.User)
+                    .SingleOrDefaultAsync(x => x.Id == value);
+                if (feed?.User?.Id == _user.Id)
+                {
+                    _feed = feed;
+                }
+            }
+
+            await UpdateData();
+            
+            StateHasChanged();
+        }
+    }
+
+}

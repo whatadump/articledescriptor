@@ -166,6 +166,7 @@ namespace ArticleDescriptor.Migrations.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: false),
                     rss_source = table.Column<string>(type: "text", nullable: false),
+                    public_link = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -185,10 +186,10 @@ namespace ArticleDescriptor.Migrations.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true),
                     text = table.Column<string>(type: "text", nullable: false),
                     classification_completed = table.Column<bool>(type: "boolean", nullable: false),
-                    classification_result = table.Column<int[]>(type: "integer[]", nullable: true),
+                    classification_result = table.Column<int>(type: "integer", nullable: true),
                     classification_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
@@ -198,8 +199,7 @@ namespace ArticleDescriptor.Migrations.Migrations
                         name: "FK_onetime_classification_entries_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -208,18 +208,18 @@ namespace ArticleDescriptor.Migrations.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ClassificationSourceId = table.Column<long>(type: "bigint", nullable: false),
+                    FeedSourceId = table.Column<long>(type: "bigint", nullable: false),
                     source_article_id = table.Column<string>(type: "text", nullable: false),
                     classification_completed = table.Column<bool>(type: "boolean", nullable: false),
-                    classification_result = table.Column<int[]>(type: "integer[]", nullable: true),
+                    classification_result = table.Column<int>(type: "integer", nullable: true),
                     classification_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_classification_entries", x => x.id);
                     table.ForeignKey(
-                        name: "FK_classification_entries_classification_sources_Classificatio~",
-                        column: x => x.ClassificationSourceId,
+                        name: "FK_classification_entries_classification_sources_FeedSourceId",
+                        column: x => x.FeedSourceId,
                         principalTable: "classification_sources",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -233,7 +233,7 @@ namespace ArticleDescriptor.Migrations.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "real_name", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "d5c0f85b-3d01-4f65-b3de-818c37d6b9b0", 0, "61547a09-b453-4765-8001-66e860596b32", "admin@example.com", true, false, null, "ADMIN@EXAMPLE.COM", "ADMIN@EXAMPLE.COM", "AQAAAAIAAYagAAAAEGnwP80Q2QWG4BI51OV0YSHC84D0cauYFQVOP5uwAv/vYMRMbuzSViTveWtMbQMr5w==", null, false, "Иван Темнохолмов", "d5007d0d-e59f-4d00-af11-d6b4274bef3e", false, "admin@example.com" });
+                values: new object[] { "d5c0f85b-3d01-4f65-b3de-818c37d6b9b0", 0, "0107145e-2e3e-4d9c-803c-19c8fadf08cb", "admin@example.com", true, false, null, "ADMIN@EXAMPLE.COM", "ADMIN@EXAMPLE.COM", "AQAAAAIAAYagAAAAEErHcfEBf9lzNx9FzsQdBHPrIUZYnF/sYg34dFyGqNMzOr0/UhXAXOm4ZcslrDgOoQ==", null, false, "Иван Темнохолмов", "d5007d0d-e59f-4d00-af11-d6b4274bef3e", false, "admin@example.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -278,9 +278,9 @@ namespace ArticleDescriptor.Migrations.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_classification_entries_ClassificationSourceId",
+                name: "IX_classification_entries_FeedSourceId",
                 table: "classification_entries",
-                column: "ClassificationSourceId");
+                column: "FeedSourceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_classification_sources_UserId",

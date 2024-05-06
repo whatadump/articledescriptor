@@ -3,6 +3,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Enums;
 using Microsoft.EntityFrameworkCore;
 
 [PrimaryKey(nameof(Id))]
@@ -14,8 +15,7 @@ public class OneTimeClassificationEntry
     public long Id { get; set; }
     
     [Column("user_id")]
-    [Required]
-    public virtual ApplicationUser User { get; set; }
+    public virtual ApplicationUser? User { get; set; }
     
     [Column("text")]
     [Required]
@@ -27,7 +27,7 @@ public class OneTimeClassificationEntry
     
     [Column("classification_result")]
     [DefaultValue(null)]
-    public int[]? ClassificationResult { get; set; }
+    public ClassificationResult? ClassificationResult { get; set; }
     
     [Column("classification_time")]
     [DefaultValue(null)]

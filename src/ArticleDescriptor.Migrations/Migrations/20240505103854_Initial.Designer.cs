@@ -3,6 +3,7 @@ using System;
 using ArticleDescriptor.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ArticleDescriptor.Migrations.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240505103854_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,13 +101,13 @@ namespace ArticleDescriptor.Migrations.Migrations
                         {
                             Id = "d5c0f85b-3d01-4f65-b3de-818c37d6b9b0",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "06d7c731-e5cb-49e3-8d4c-f6316b46d361",
+                            ConcurrencyStamp = "0107145e-2e3e-4d9c-803c-19c8fadf08cb",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKU0bjwL2Virpe+wk2FWE3Kx9izp05byVS2E2Wr4oDg0M7tDI+M3Ka6oNRn7yquD0g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEErHcfEBf9lzNx9FzsQdBHPrIUZYnF/sYg34dFyGqNMzOr0/UhXAXOm4ZcslrDgOoQ==",
                             PhoneNumberConfirmed = false,
                             RealName = "Иван Темнохолмов",
                             SecurityStamp = "d5007d0d-e59f-4d00-af11-d6b4274bef3e",
@@ -141,16 +144,6 @@ namespace ArticleDescriptor.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("source_article_id");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("text");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("title");
 
                     b.HasKey("Id");
 

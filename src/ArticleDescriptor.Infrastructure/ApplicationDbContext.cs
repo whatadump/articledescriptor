@@ -12,9 +12,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     }
     
-    public DbSet<ClassificationEntry> Entries { get; set; }
+    public DbSet<FeedEntry> FeedEntries { get; set; }
     
-    public DbSet<ClassificationSource> Sources { get; set; }
+    public DbSet<FeedSource> FeedSources { get; set; }
     
     public DbSet<OneTimeClassificationEntry> OneTimeEntries { get; set; }
 

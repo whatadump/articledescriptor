@@ -1,0 +1,84 @@
+﻿@page "/me/feeds"
+@using Microsoft.AspNetCore.Authorization
+@using ArticleDescriptor.Infrastructure.Interfaces
+@using ArticleDescriptor.Web.Client.Modals
+@attribute [Authorize]
+
+@inject IFeedService FeedService
+@inject UserManager UserManager
+@inject IDialogService DialogService
+
+<PageTitle>Мои ленты</PageTitle>
+
+<MudToolBar>
+    <MudSpacer/>
+    <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" OnClick="@OnAddClick">Добавить</MudButton>
+</MudToolBar>
+
+<MudDrawerContainer>
+    <h3>Мои ленты</h3>
+    @if (_feeds is { Count: > 0 })
+    {
+        <MudGrid>
+            @foreach (var feed in _feeds)
+            {
+                <MudItem xs="12" md="4" lg="3">
+                    <MudCard>
+                        <MudCardHeader Style="padding-bottom: 0!important;">Лента</MudCardHeader>
+                        <MudCardContent>
+                            <MudText Typo="Typo.h6">@feed.Name</MudText>
+                            <MudLink Href="@feed.PublicLink">Ссылка на ленту</MudLink>
+                        </MudCardContent>
+                        <MudCardActions Class="gap-3">
+                            <MudSpacer/>
+                            <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit"/>
+                            <MudButton Href="@($"/me/feeds/{feed.Id}")" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Link">Подробнее</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    }
+    else
+    {
+        <MudText Typo="Typo.h6">У вас нет лент</MudText>
+    }
+</MudDrawerContainer>
+
+@code {
+    private IReadOnlyCollection<FeedSource> _feeds;
+    private ApplicationUser _user;
+    
+    private async Task UpdateData()
+    {
+        _feeds = await FeedService.GetUserFeeds(_user);
+        StateHasChanged();
+    }
+
+    private async Task OnAddClick()
+    {
+        async Task OnSubmit() => await UpdateData();
+        
+        var parameters = new DialogParameters<AddFeedModal>()
+        {
+            { x => x.OnSubmit, OnSubmit }
+        };
+        var options = new DialogOptions()
+        {
+            CloseOnEscapeKey = true
+        };
+
+        await (await DialogService.ShowAsync<AddFeedModal>("Добавление фида", parameters, options)).Result;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _user = await UserManager.GetAuthenticatedUserAsync();
+            await UpdateData();
+            StateHasChanged();
+        }
+    }
+
+}

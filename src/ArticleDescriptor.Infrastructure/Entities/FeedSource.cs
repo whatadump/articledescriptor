@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 [Table("classification_sources")]
 [PrimaryKey(nameof(Id))]
-public class ClassificationSource
+public class FeedSource
 {
     [Column("Id")]
     [Required]
@@ -20,9 +20,12 @@ public class ClassificationSource
     [Required]
     public string RssSource { get; set; }
     
+    [Column("public_link")]
+    public string? PublicLink { get; set; }
+    
     [Column("user_id")]
     [Required]
     public virtual ApplicationUser User { get; set; }
     
-    public virtual ICollection<ClassificationEntry> Entries { get; }
+    public virtual ICollection<FeedEntry> Entries { get; }
 }

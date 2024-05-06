@@ -3,11 +3,12 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Enums;
 using Microsoft.EntityFrameworkCore;
 
 [PrimaryKey(nameof(Id))]
 [Table("classification_entries")]
-public class ClassificationEntry
+public class FeedEntry
 {
     [Column("id")]
     [Required]
@@ -15,11 +16,19 @@ public class ClassificationEntry
     
     [Required]
     [Column("classification_source_id")]
-    public virtual ClassificationSource ClassificationSource { get; set; }
+    public virtual FeedSource FeedSource { get; set; }
+    
+    [Required]
+    [Column("title")]
+    public string Title { get; set; }
     
     [Column("source_article_id")]
     [Required]
     public string SourceArticleId { get; set; }
+    
+    [Column("text")]
+    [Required]
+    public string Text { get; set; }
     
     [Column("classification_completed")]
     [DefaultValue(false)]
@@ -27,7 +36,7 @@ public class ClassificationEntry
     
     [Column("classification_result")]
     [DefaultValue(null)]
-    public int[]? ClassificationResult { get; set; }
+    public ClassificationResult? ClassificationResult { get; set; }
     
     [Column("classification_time")]
     [DefaultValue(null)]

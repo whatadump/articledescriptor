@@ -1,0 +1,97 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using ArticleDescriptor.Infrastructure.Interfaces
+@using Color = MudBlazor.Color
+
+@inject IFeedService FeedService
+@inject UserManager UserManager
+
+<MudDialog>
+    <DialogContent>
+        @if (_showInvalidFeed)
+        {
+            <MudAlert Variant="Variant.Filled" Icon="@Icons.Material.Filled.Error" Severity="Severity.Error">Не удалось распознать ссылку на ленту</MudAlert>
+        }
+        @if (_addError)
+        {
+            <MudAlert Variant="Variant.Filled" Icon="@Icons.Material.Filled.Error" Severity="Severity.Error">Не удалось добавить ленту</MudAlert>
+        }
+        <MudForm @ref="_form" Model="@_model" @bind-IsValid="_isValid">
+            <MudTextField Variant="Variant.Outlined" For="() => _model.Name" @bind-Value="_model.Name" Label="Название ленты"/>
+            <MudTextField Variant="Variant.Outlined" For="() => _model.Path" @bind-Value="_model.Path" Label="Ссылка на ленту"/>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@Save" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Success">Добавить</MudButton>
+        <MudButton OnClick="@Instance.Cancel" StartIcon="@Icons.Material.Filled.Cancel" Variant="Variant.Outlined">Отмена</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [CascadingParameter]
+    public MudDialogInstance Instance { get; set; }
+
+    private bool _isValid { get; set; }
+    
+    private bool _showInvalidFeed { get; set; }
+    
+    private bool _addError { get; set; }
+    
+    private MudForm _form { get; set; }
+    
+    private FormModel _model { get; set; } = new();
+    
+    private ApplicationUser _user { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _user = await UserManager.GetAuthenticatedUserAsync();
+            StateHasChanged();
+        }
+    }
+
+    [Parameter]
+    public Func<Task> OnSubmit { get; set; }
+
+    private async Task Save()
+    {
+        _showInvalidFeed = false;
+        _addError = false;
+        await _form.Validate();
+        if (_isValid)
+        {
+            if (! await FeedService.IsFeedUrlValid(_model.Path))
+            {
+                _showInvalidFeed = true;
+                return;
+            }
+
+            if (await FeedService.AddFeed(_user, _model.Name, _model.Path))
+            {
+                if (OnSubmit is not null)
+                {
+                    await OnSubmit();
+                }
+                Instance.Close();
+            }
+            else
+            {
+                _addError = true;
+            }
+            
+        }
+    }
+
+    public class FormModel
+    {
+        [StringLength(200, MinimumLength = 5, ErrorMessage = "Длина ссылки на ленту должна быть от 5 до 200 символов")]
+        [Required(ErrorMessage = "Забыли ввести ссылку :(")]
+        public string Path { get; set; }
+        
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Длина названия ленты должна быть от 3 до 50 символов")]
+        [Required(ErrorMessage = "Забыли ввести название :(")]
+        public string Name { get; set; }
+    }
+}

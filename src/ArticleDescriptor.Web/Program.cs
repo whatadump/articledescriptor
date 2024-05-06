@@ -81,6 +81,10 @@ app.UseRequestLocalization(new RequestLocalizationOptions()
     DefaultRequestCulture = new RequestCulture("ru-RU")
 });
 
+app.MapPost("/classify", async (e) =>
+{
+});
+
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
 

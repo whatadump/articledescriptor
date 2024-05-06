@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ArticleDescriptor.Migrations.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240502194256_Initial")]
-    partial class Initial
+    [Migration("20240505152941_AddTitleToFeedEntry")]
+    partial class AddTitleToFeedEntry
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,13 +101,13 @@ namespace ArticleDescriptor.Migrations.Migrations
                         {
                             Id = "d5c0f85b-3d01-4f65-b3de-818c37d6b9b0",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "61547a09-b453-4765-8001-66e860596b32",
+                            ConcurrencyStamp = "30765b1d-4dea-4392-bb2b-75a0938cf9bb",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGnwP80Q2QWG4BI51OV0YSHC84D0cauYFQVOP5uwAv/vYMRMbuzSViTveWtMbQMr5w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECt+xVaIvWDES1uEMf+zvleumfhE421iiVeRXnM2J6pa/M5Rl5x2wlb06LBxxWQ6zQ==",
                             PhoneNumberConfirmed = false,
                             RealName = "Иван Темнохолмов",
                             SecurityStamp = "d5007d0d-e59f-4d00-af11-d6b4274bef3e",
@@ -116,7 +116,7 @@ namespace ArticleDescriptor.Migrations.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ArticleDescriptor.Infrastructure.Entities.ClassificationEntry", b =>
+            modelBuilder.Entity("ArticleDescriptor.Infrastructure.Entities.FeedEntry", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -129,30 +129,35 @@ namespace ArticleDescriptor.Migrations.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("classification_completed");
 
-                    b.Property<int[]>("ClassificationResult")
-                        .HasColumnType("integer[]")
+                    b.Property<int?>("ClassificationResult")
+                        .HasColumnType("integer")
                         .HasColumnName("classification_result");
-
-                    b.Property<long>("ClassificationSourceId")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("ClassificationTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("classification_time");
+
+                    b.Property<long>("FeedSourceId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("SourceArticleId")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("source_article_id");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassificationSourceId");
+                    b.HasIndex("FeedSourceId");
 
                     b.ToTable("classification_entries");
                 });
 
-            modelBuilder.Entity("ArticleDescriptor.Infrastructure.Entities.ClassificationSource", b =>
+            modelBuilder.Entity("ArticleDescriptor.Infrastructure.Entities.FeedSource", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -165,6 +170,10 @@ namespace ArticleDescriptor.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
+
+                    b.Property<string>("PublicLink")
+                        .HasColumnType("text")
+                        .HasColumnName("public_link");
 
                     b.Property<string>("RssSource")
                         .IsRequired()
@@ -195,8 +204,8 @@ namespace ArticleDescriptor.Migrations.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("classification_completed");
 
-                    b.Property<int[]>("ClassificationResult")
-                        .HasColumnType("integer[]")
+                    b.Property<int?>("ClassificationResult")
+                        .HasColumnType("integer")
                         .HasColumnName("classification_result");
 
                     b.Property<DateTime?>("ClassificationTime")
@@ -209,7 +218,6 @@ namespace ArticleDescriptor.Migrations.Migrations
                         .HasColumnName("text");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -366,18 +374,18 @@ namespace ArticleDescriptor.Migrations.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ArticleDescriptor.Infrastructure.Entities.ClassificationEntry", b =>
+            modelBuilder.Entity("ArticleDescriptor.Infrastructure.Entities.FeedEntry", b =>
                 {
-                    b.HasOne("ArticleDescriptor.Infrastructure.Entities.ClassificationSource", "ClassificationSource")
+                    b.HasOne("ArticleDescriptor.Infrastructure.Entities.FeedSource", "FeedSource")
                         .WithMany("Entries")
-                        .HasForeignKey("ClassificationSourceId")
+                        .HasForeignKey("FeedSourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ClassificationSource");
+                    b.Navigation("FeedSource");
                 });
 
-            modelBuilder.Entity("ArticleDescriptor.Infrastructure.Entities.ClassificationSource", b =>
+            modelBuilder.Entity("ArticleDescriptor.Infrastructure.Entities.FeedSource", b =>
                 {
                     b.HasOne("ArticleDescriptor.Infrastructure.Entities.ApplicationUser", "User")
                         .WithMany()
@@ -392,9 +400,7 @@ namespace ArticleDescriptor.Migrations.Migrations
                 {
                     b.HasOne("ArticleDescriptor.Infrastructure.Entities.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -450,7 +456,7 @@ namespace ArticleDescriptor.Migrations.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ArticleDescriptor.Infrastructure.Entities.ClassificationSource", b =>
+            modelBuilder.Entity("ArticleDescriptor.Infrastructure.Entities.FeedSource", b =>
                 {
                     b.Navigation("Entries");
                 });
