@@ -13,4 +13,6 @@ public interface IFeedService
     public Task<ICollection<FeedEntry>> GetExistingFeedEntries(FeedSource? source);
 
     public Task<ICollection<FeedEntry>> LoadEntriesForFeed(FeedSource? source, int count = 3);
+
+    public Task<bool> DeleteEntry(FeedEntry entry);
 }

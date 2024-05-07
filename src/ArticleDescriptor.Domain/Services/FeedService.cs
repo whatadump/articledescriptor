@@ -149,6 +149,19 @@ public partial class FeedService : IFeedService
         return newEntries;
     }
 
+    public async Task<bool> DeleteEntry(FeedEntry? entry)
+    {
+        if (entry is null)
+        {
+            return false;
+        }
+
+        _context.FeedEntries.Remove(entry);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
     [GeneratedRegex(@"[^\w ]", RegexOptions.Compiled)]
     private static partial Regex StringFilteringRegex();
 }

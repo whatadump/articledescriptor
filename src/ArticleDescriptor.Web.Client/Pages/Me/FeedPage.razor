@@ -53,10 +53,13 @@
                                 <MudTh>
                                     Результат распознавания
                                 </MudTh>
+                                <MudTh>
+                                    
+                                </MudTh>
                             </HeaderContent>
                             <RowTemplate>
                                 <MudTd>
-                                    @context.Title
+                                    @($"{context.Title[..30]}...")
                                 </MudTd>
                                 <MudTd>
                                     <MudLink Target="_blank" Href="@context.SourceArticleId">Ссылка...</MudLink>
@@ -68,6 +71,12 @@
                                     @if (context is { ClassificationCompleted: true, ClassificationResult: not null })
                                     {
                                         <MudChip>@context.ClassificationResult.Value.GetMemberName()</MudChip>
+                                    }
+                                </MudTd>
+                                <MudTd>
+                                    @if (context.IsError)
+                                    {
+                                        <MudIconButton OnClick="@(async () => await DeleteClick(context))" Icon="@Icons.Material.Filled.Delete"/>
                                     }
                                 </MudTd>
                             </RowTemplate>
@@ -139,6 +148,21 @@
             
             StateHasChanged();
         }
+    }
+
+    private async Task DeleteClick(FeedEntry entry)
+    {
+        var result = await FeedService.DeleteEntry(entry);
+        if (result)
+        {
+            Snackbar.Add("Запись ленты удалена", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Не удалось удалить запись ленты", Severity.Error);
+        }
+
+        await UpdateData();
     }
 
 }
