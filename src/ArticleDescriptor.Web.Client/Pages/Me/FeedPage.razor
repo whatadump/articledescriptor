@@ -4,6 +4,7 @@
 @using ArticleDescriptor.Infrastructure
 @using ArticleDescriptor.Infrastructure.Enums
 @using ArticleDescriptor.Infrastructure.Utils
+@using ArticleDescriptor.Web.Client.Utils
 @using Microsoft.EntityFrameworkCore
 @attribute [Authorize]
 
@@ -61,7 +62,7 @@
                                     <MudLink Target="_blank" Href="@context.SourceArticleId">Ссылка...</MudLink>
                                 </MudTd>
                                 <MudTd>
-                                    <MudChip>@_statuses[@context.Id].GetMemberName()</MudChip>
+                                    <MudChip Color="@_statuses[context.Id].ToColor()">@_statuses[context.Id].GetMemberName()</MudChip>
                                 </MudTd>
                                 <MudTd>
                                     @if (context is { ClassificationCompleted: true, ClassificationResult: not null })

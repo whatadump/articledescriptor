@@ -128,7 +128,7 @@ public partial class FeedService : IFeedService
                 ClassificationTime = DateTime.UtcNow,
                 FeedSource = source
             };
-
+            
             var sanitizedText =
                 _sanitizer
                     .Sanitize(item.Description ?? item.Content);

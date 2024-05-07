@@ -15,15 +15,23 @@
         {
             services.AddTransient<IFeedService, FeedService>();
             services.AddSingleton<IClassificationService, ClassificationService>(_ => new ClassificationService());
-            services.AddSingleton<IHtmlSanitizer, HtmlSanitizer>(_ => new HtmlSanitizer(new HtmlSanitizerOptions()
+            services.AddSingleton<IHtmlSanitizer, HtmlSanitizer>(_ =>
             {
-                AllowedAttributes = ImmutableHashSet<string>.Empty,
-                AllowedTags = ImmutableHashSet<string>.Empty,
-                AllowedSchemes = ImmutableHashSet<string>.Empty,
-                AllowedAtRules = ImmutableHashSet<CssRuleType>.Empty,
-                AllowedCssClasses = ImmutableHashSet<string>.Empty,
-                AllowedCssProperties = ImmutableHashSet<string>.Empty,
-            }));
+                var sanitizer = new HtmlSanitizer(new HtmlSanitizerOptions()
+                {
+                    AllowedAttributes = ImmutableHashSet<string>.Empty,
+                    AllowedTags = ImmutableHashSet<string>.Empty,
+                    AllowedSchemes = ImmutableHashSet<string>.Empty,
+                    AllowedAtRules = ImmutableHashSet<CssRuleType>.Empty,
+                    AllowedCssClasses = ImmutableHashSet<string>.Empty,
+                    AllowedCssProperties = ImmutableHashSet<string>.Empty,
+                })
+                {
+                    KeepChildNodes = true,
+                };
+
+                return sanitizer;
+            });
 
             services.AddHostedService<MigratorHostedService>();
             services.AddHostedService<ClassificationHostedService>();
