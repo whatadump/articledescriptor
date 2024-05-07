@@ -29,19 +29,14 @@ public class ClassificationService : IClassificationService
     
     public ClassificationStatus GetClassificationStatus(FeedEntry entry)
     {
+        if (entry.IsError)
+        {
+            return ClassificationStatus.ClassificationError;
+        }
+        
         if (entry.ClassificationCompleted)
         {
             return ClassificationStatus.ClassificationCompleted;
-        }
-        
-        if (CurrentClassifyingEntryId == entry.Id)
-        {
-            return ClassificationStatus.IsBeingClassified;
-        }
-
-        if (_feedEntryIds.Contains(entry.Id))
-        {
-            return ClassificationStatus.InQueue;
         }
 
         return ClassificationStatus.Idle;

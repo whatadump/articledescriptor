@@ -4,15 +4,12 @@ using Attributes;
 
 public enum ClassificationStatus
 {
-    [MemberName("Не распознается")]
+    [MemberName("В очереди")]
     Idle = 0,
     
-    [MemberName("В очереди")]
-    InQueue = 1,
-    
-    [MemberName("Распознается")]
-    IsBeingClassified = 2,
-    
     [MemberName("Распознано")]
-    ClassificationCompleted = 3
+    ClassificationCompleted = 2,
+    
+    [MemberName("Ошибка")]
+    ClassificationError = 3
 }

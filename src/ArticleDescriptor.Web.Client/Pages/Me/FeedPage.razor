@@ -57,8 +57,8 @@
                                 <MudTd>
                                     @context.Title
                                 </MudTd>
-                                <MudTd Style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
-                                    @context.SourceArticleId
+                                <MudTd>
+                                    <MudLink Target="_blank" Href="@context.SourceArticleId">Ссылка...</MudLink>
                                 </MudTd>
                                 <MudTd>
                                     <MudChip>@_statuses[@context.Id].GetMemberName()</MudChip>
@@ -66,7 +66,7 @@
                                 <MudTd>
                                     @if (context is { ClassificationCompleted: true, ClassificationResult: not null })
                                     {
-                                        <MudChip>@context.ClassificationResult.Value.GetMemberName() ?? ""</MudChip>
+                                        <MudChip>@context.ClassificationResult.Value.GetMemberName()</MudChip>
                                     }
                                 </MudTd>
                             </RowTemplate>

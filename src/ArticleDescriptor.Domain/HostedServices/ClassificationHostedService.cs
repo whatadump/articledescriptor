@@ -21,7 +21,7 @@ public class ClassificationHostedService : IHostedService
 
     private readonly IOptions<ClassifierOptions> _options;
 
-    private const int DefaultDelayTimeMs = 10000;
+    private const int DefaultDelayTimeMs = 20000;
 
     public ClassificationHostedService(
         ILogger<ClassificationHostedService> logger, 
@@ -58,12 +58,12 @@ public class ClassificationHostedService : IHostedService
             {
                 var unclassifiedEntries = await context.FeedEntries
                     .Where(x => !x.ClassificationCompleted)
+                    .Where(x => !x.IsError)
                     .Take(10)
                     .ToArrayAsync(cancellationToken: cancellationToken);
 
                 if (unclassifiedEntries.Length == 0)
                 {
-                    _logger.LogWarning("Очередь распознавания пуста");
                     await Task.Delay(TimeSpan.FromMilliseconds(DefaultDelayTimeMs), cancellationToken);
                     continue;
                 }
@@ -72,6 +72,15 @@ public class ClassificationHostedService : IHostedService
                 {
                     _logger.LogWarning($"Отправляем запрос на распознавание ID: {feedEntry.Id}");
 
+                    if (string.IsNullOrEmpty(feedEntry.Text))
+                    {
+                        _logger.LogError($"Пустой текст для EntryID: {feedEntry.Id}. Запись помечена как ошибка");
+                        feedEntry.IsError = true;
+                        context.FeedEntries.Update(feedEntry);
+                        await context.SaveChangesAsync(cancellationToken);
+                        continue;
+                    }
+                    
                     var response = await client.PostAsJsonAsync(endpoint, new ClassifyRequestModel
                     {
                         Text = feedEntry.Text

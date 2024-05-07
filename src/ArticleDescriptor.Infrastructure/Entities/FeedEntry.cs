@@ -42,4 +42,7 @@ public class FeedEntry
     [DefaultValue(null)]
     public DateTime? ClassificationTime { get; set; }
     
+    [Column("is_error")]
+    [DefaultValue(false)]
+    public bool IsError { get; set; }
 }

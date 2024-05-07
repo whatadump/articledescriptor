@@ -1,6 +1,10 @@
 ﻿<MudNavMenu>
 	<MudText Style="padding: 8px 8px 8px 16px; color:  #666; font-weight: 600" Typo="Typo.body2">Основное</MudText>
-	
+	<AuthorizeView>
+		<Authorized>
+			<MudNavLink Href="me/feeds" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Feed">Мои ленты</MudNavLink>
+		</Authorized>
+	</AuthorizeView>
 	<MudText Style="padding: 8px 8px 8px 16px; color:  #666; font-weight: 600" Typo="Typo.body2">Аккаунт</MudText>
 	<AuthorizeView>
 		<Authorized>
