@@ -26,5 +26,11 @@
     <ProjectReference Include="..\ArticleDescriptor.Migrations\ArticleDescriptor.Migrations.csproj" />
     <ProjectReference Include="..\ArticleDescriptor.Web.Client\ArticleDescriptor.Web.Client.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
 </Project>

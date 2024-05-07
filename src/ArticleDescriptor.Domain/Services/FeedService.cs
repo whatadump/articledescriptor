@@ -1,6 +1,7 @@
 ﻿namespace ArticleDescriptor.Domain.Services;
 
 using System.Collections.Frozen;
+using System.Text.RegularExpressions;
 using CodeHollow.FeedReader;
 using Ganss.Xss;
 using Infrastructure;
@@ -9,7 +10,7 @@ using Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-public class FeedService : IFeedService
+public partial class FeedService : IFeedService
 {
     private readonly ApplicationDbContext _context;
     private readonly ILogger<FeedService> _logger;
@@ -75,8 +76,6 @@ public class FeedService : IFeedService
         try
         {
             var feed = await FeedReader.ReadAsync(path);
-            var title = feed.Title;
-            var copy = feed.Copyright;
             var items = feed.Items.Count;
             _logger.LogInformation($"Удалось распознать {items} элементов фида");
             return true;
@@ -126,17 +125,20 @@ public class FeedService : IFeedService
             {
                 SourceArticleId = item.Link,
                 Title = item.Title,
-                ClassificationTime = DateTime.Now,
+                ClassificationTime = DateTime.UtcNow,
                 FeedSource = source
             };
 
-            var sanitizedTokens =
+            var sanitizedText =
                 _sanitizer
-                    .Sanitize(item.Description ?? item.Content)
+                    .Sanitize(item.Description ?? item.Content);
+            
+            var tokens = StringFilteringRegex()
+                    .Replace(sanitizedText, string.Empty)
                     .Split(' ', StringSplitOptions.RemoveEmptyEntries)
                     .Take(DefaultTextWordsCount);
 
-            newFeedEntry.Text = string.Join(" ", sanitizedTokens);
+            newFeedEntry.Text = string.Join(" ", tokens);
 
             await _context.FeedEntries.AddAsync(newFeedEntry);
             newEntries.Add(newFeedEntry);
@@ -146,4 +148,7 @@ public class FeedService : IFeedService
 
         return newEntries;
     }
+
+    [GeneratedRegex(@"[^\w ]", RegexOptions.Compiled)]
+    private static partial Regex StringFilteringRegex();
 }

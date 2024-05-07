@@ -3,6 +3,7 @@
     using System.Collections.Immutable;
     using AngleSharp.Css.Dom;
     using Ganss.Xss;
+    using HostedServices;
     using Infrastructure.Interfaces;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -10,10 +11,10 @@
 
     public static class Bundle
     {
-        public static IServiceCollection UseDomainServices(this IServiceCollection services, IConfigurationRoot configuration)
+        public static IServiceCollection UseDomainServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IFeedService, FeedService>();
-            services.AddSingleton<IClassificationService, ClassificationService>();
+            services.AddSingleton<IClassificationService, ClassificationService>(_ => new ClassificationService());
             services.AddSingleton<IHtmlSanitizer, HtmlSanitizer>(_ => new HtmlSanitizer(new HtmlSanitizerOptions()
             {
                 AllowedAttributes = ImmutableHashSet<string>.Empty,
@@ -23,6 +24,9 @@
                 AllowedCssClasses = ImmutableHashSet<string>.Empty,
                 AllowedCssProperties = ImmutableHashSet<string>.Empty,
             }));
+
+            services.AddHostedService<MigratorHostedService>();
+            services.AddHostedService<ClassificationHostedService>();
             
             return services;
         } 

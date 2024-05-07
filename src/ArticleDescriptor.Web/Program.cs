@@ -2,6 +2,8 @@ using System.Globalization;
 using ArticleDescriptor.Application;
 using ArticleDescriptor.Infrastructure;
 using ArticleDescriptor.Infrastructure.Entities;
+using ArticleDescriptor.Infrastructure.Enums;
+using ArticleDescriptor.Infrastructure.Models;
 using ArticleDescriptor.Web.Client;
 using ArticleDescriptor.Web.Client.Layout;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -79,10 +81,6 @@ app.MapRazorComponents<App>()
 app.UseRequestLocalization(new RequestLocalizationOptions()
 {
     DefaultRequestCulture = new RequestCulture("ru-RU")
-});
-
-app.MapPost("/classify", async (e) =>
-{
 });
 
 // Add additional endpoints required by the Identity /Account Razor components.

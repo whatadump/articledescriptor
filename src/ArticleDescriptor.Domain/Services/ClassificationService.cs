@@ -11,7 +11,9 @@ public class ClassificationService : IClassificationService
     // ReSharper disable once MemberCanBePrivate.Global
     internal readonly ConcurrentQueue<long> _feedEntryIds = new();
 
-    internal long CurrentClassifyingEntryId = -1;
+    private long CurrentClassifyingEntryId = -1;
+    public ConcurrentQueue<long> GetCurrentQueue() => _feedEntryIds;
+    public void SetClassifyingId(long id) => CurrentClassifyingEntryId = id;
 
     public bool InQueue(long feedEntryId) => _feedEntryIds.Contains(feedEntryId);
 
