@@ -1,0 +1,54 @@
+﻿@page "/Classify"
+@using ArticleDescriptor.Infrastructure.Interfaces
+@using Color = MudBlazor.Color
+
+@inject IOneTimeService OneTimeService
+@inject UserManager UserManager
+@inject NavigationManager Navigator
+@inject ISnackbar Snackbar
+
+<h3 class="mt-5">Распознавание текста</h3>
+<MudItem xs="12" md="6" Class="mt-5">
+  <MudCard>
+      <MudCardContent>
+          <MarkdownEditor @bind-Value="_markdownText" @bind-ValueHTML="@_htmlText"/>
+          @if (_errorText is not null)
+          {
+              <MudAlert Severity="Severity.Error" Variant="Variant.Filled">@_errorText</MudAlert>
+          }
+      </MudCardContent>
+      <MudCardActions Style="padding: 0 16px 16px;">
+          <MudButton OnClick="@OnClassify" StartIcon="@Icons.Material.Filled.Code" Color="Color.Primary" Variant="Variant.Outlined">Распознать</MudButton>
+      </MudCardActions>
+  </MudCard>
+</MudItem>
+
+@code{
+
+    private ApplicationUser? _user;
+    
+    private string _markdownText { get; set; }
+    private string _htmlText { get; set; }
+    private string? _errorText { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {   
+        if (firstRender)
+        {
+            _user = await UserManager.GetAuthenticatedUserAsync();
+        }
+    }
+
+    private async Task OnClassify()
+    {
+        _errorText = null;
+        // if (string.IsNullOrEmpty(_markdownText) || string.IsNullOrWhiteSpace(_markdownText))
+        // {
+        //     Snackbar.Add("Забыли ввести текст!", Severity.Error);
+        //     return;
+        // }
+        _errorText = await OneTimeService.SaveOneTimeEntry(_htmlText, _user);
+        Navigator.NavigateTo("/", true);
+    }
+
+}

@@ -13,8 +13,12 @@
     {
         public static IServiceCollection UseDomainServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHostedService<MigratorHostedService>();
+            services.AddHostedService<ClassificationHostedService>();
+            
             services.AddTransient<IFeedService, FeedService>();
-            services.AddSingleton<IClassificationService, ClassificationService>(_ => new ClassificationService());
+            services.AddTransient<IOneTimeService, OneTimeService>();
+            
             services.AddSingleton<IHtmlSanitizer, HtmlSanitizer>(_ =>
             {
                 var sanitizer = new HtmlSanitizer(new HtmlSanitizerOptions()
@@ -33,8 +37,7 @@
                 return sanitizer;
             });
 
-            services.AddHostedService<MigratorHostedService>();
-            services.AddHostedService<ClassificationHostedService>();
+
             
             return services;
         } 

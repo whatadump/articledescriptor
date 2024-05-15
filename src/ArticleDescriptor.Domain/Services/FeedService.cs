@@ -14,7 +14,6 @@ public partial class FeedService : IFeedService
 {
     private readonly ApplicationDbContext _context;
     private readonly ILogger<FeedService> _logger;
-    private readonly IClassificationService _classificationService;
     private readonly IHtmlSanitizer _sanitizer;
 
     private const int DefaultTextWordsCount = 200;
@@ -22,12 +21,10 @@ public partial class FeedService : IFeedService
     public FeedService(
         ApplicationDbContext context, 
         ILogger<FeedService> logger, 
-        IClassificationService classificationService, 
         IHtmlSanitizer sanitizer)
     {
         _context = context;
         _logger = logger;
-        _classificationService = classificationService;
         _sanitizer = sanitizer;
     }
 
@@ -125,7 +122,6 @@ public partial class FeedService : IFeedService
             {
                 SourceArticleId = item.Link,
                 Title = item.Title,
-                ClassificationTime = DateTime.UtcNow,
                 FeedSource = source
             };
             

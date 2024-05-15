@@ -4,11 +4,12 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Enums;
+using Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 [PrimaryKey(nameof(Id))]
 [Table("classification_entries")]
-public class FeedEntry
+public class FeedEntry : IClassifiable
 {
     [Column("id")]
     [Required]

@@ -1,8 +1,11 @@
 ﻿<MudNavMenu>
-	<MudText Style="padding: 8px 8px 8px 16px; color:  #666; font-weight: 600" Typo="Typo.body2">Основное</MudText>
+	<MudText Style="padding: 8px 8px 8px 16px; color:  #666; font-weight: 600" Typo="Typo.body2">Тексты</MudText>
+	<MudNavLink Href="/Classify" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ShortText">Добавить текст</MudNavLink>
+	
+	<MudText Style="padding: 8px 8px 8px 16px; color:  #666; font-weight: 600" Typo="Typo.body2">Ленты</MudText>
 	<AuthorizeView>
 		<Authorized>
-			<MudNavLink Href="me/feeds" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Feed">Мои ленты</MudNavLink>
+			<MudNavLink Href="/me/feeds" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Feed">Мои ленты</MudNavLink>
 		</Authorized>
 	</AuthorizeView>
 	<MudText Style="padding: 8px 8px 8px 16px; color:  #666; font-weight: 600" Typo="Typo.body2">Аккаунт</MudText>

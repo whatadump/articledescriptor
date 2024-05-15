@@ -1,4 +1,4 @@
-﻿@page "/me/feeds/{id}"
+﻿@page "/me/feed/{id}"
 @using Microsoft.AspNetCore.Authorization
 @using ArticleDescriptor.Infrastructure.Interfaces
 @using ArticleDescriptor.Infrastructure
@@ -10,7 +10,6 @@
 
 @inject IFeedService FeedService
 @inject UserManager UserManager
-@inject IClassificationService ClassificationService
 @inject IDialogService DialogService
 @inject ApplicationDbContext Context
 @inject ISnackbar Snackbar
@@ -107,7 +106,7 @@
     {
         _loading = true;
         _entries = await FeedService.GetExistingFeedEntries(_feed);
-        _statuses = _entries.ToDictionary(x => x.Id, x => ClassificationService.GetClassificationStatus(x));
+        _statuses = _entries.ToDictionary(x => x.Id, x => x.GetStatus());
         _loading = false;
         StateHasChanged();
     }

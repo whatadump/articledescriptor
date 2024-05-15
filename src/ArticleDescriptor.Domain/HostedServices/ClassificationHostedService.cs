@@ -15,8 +15,6 @@ public class ClassificationHostedService : IHostedService
 {
     private readonly ILogger<ClassificationHostedService> _logger;
 
-    private readonly IClassificationService _classificationService;
-
     private readonly IServiceProvider _rootProvider;
 
     private readonly IOptions<ClassifierOptions> _options;
@@ -26,12 +24,10 @@ public class ClassificationHostedService : IHostedService
     public ClassificationHostedService(
         ILogger<ClassificationHostedService> logger, 
         IServiceProvider rootProvider, 
-        IClassificationService classificationService, 
         IOptions<ClassifierOptions> options)
     {
         _logger = logger;
         _rootProvider = rootProvider;
-        _classificationService = classificationService;
         _options = options;
         
         _logger.LogWarning($"Данные конфигурации: {_options.Value.Endpoint}");
@@ -136,7 +132,6 @@ public class ClassificationHostedService : IHostedService
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _classificationService.SetClassifyingId(-1);
         return Task.CompletedTask;
     }
 }
