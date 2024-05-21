@@ -1,19 +1,15 @@
-﻿<MudNavMenu>
-	<MudText Style="padding: 8px 8px 8px 16px; color:  #666; font-weight: 600" Typo="Typo.body2">Тексты</MudText>
-	<MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.TextSnippet">Тексты пользователей</MudNavLink>
-	<AuthorizeView>
-		<Authorized>
-			<MudNavLink Href="/Classify" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ShortText">Добавить текст</MudNavLink>
-		</Authorized>
-	</AuthorizeView>
+﻿<MudNavMenu Class="text-white">
+	<MudText Style="padding: 8px 8px 8px 16px; color: #ddd; font-weight: 600" Typo="Typo.body2">Тексты</MudText>
+	<MudNavLink Href="/onetimes" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.TextSnippet">Тексты пользователей</MudNavLink>
+	<MudNavLink Href="/Classify" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ShortText">Добавить текст</MudNavLink>
 	
 	<AuthorizeView>
 		<Authorized>
-			<MudText Style="padding: 8px 8px 8px 16px; color:  #666; font-weight: 600" Typo="Typo.body2">Ленты</MudText>
+			<MudText Style="padding: 8px 8px 8px 16px; color:  #ddd; font-weight: 600" Typo="Typo.body2">Ленты</MudText>
 			<MudNavLink Href="/me/feeds" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Feed">Мои ленты</MudNavLink>
 		</Authorized>
 	</AuthorizeView>
-	<MudText Style="padding: 8px 8px 8px 16px; color:  #666; font-weight: 600" Typo="Typo.body2">Аккаунт</MudText>
+	<MudText Style="padding: 8px 8px 8px 16px; color:  #ddd; font-weight: 600" Typo="Typo.body2">Аккаунт</MudText>
 	<AuthorizeView>
 		<Authorized>
 			<MudNavLink Href="Account/Manage" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ManageAccounts">Управление профилем</MudNavLink>

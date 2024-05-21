@@ -1,14 +1,12 @@
 ﻿@using Color = MudBlazor.Color
 @inherits LayoutComponentBase
 
-@inject NavigationManager Navigation
-
 <MudThemingProvider Theme="Theme" IsDarkMode="true" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
+<MudLayout Class="text-white" data-bs-theme="dark">
     <MudAppBar Elevation="0">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(_ => DrawerToggle())"/>
         <MudText Typo="Typo.h6">
@@ -16,14 +14,14 @@
         </MudText>
         <MudSpacer/>
         <AuthorizeView>
-            <MudMenuItem><MudLink Href="/Account/Logout">Выйти</MudLink></MudMenuItem>
+            <MudLink Href="/Account/Logout">Выйти</MudLink>
         </AuthorizeView>
     </MudAppBar>
     <MudDrawer @bind-Open="DrawerOpen" Elevation="2">
         <MudDrawerHeader Style="padding-left: 16px">
-            <MudStack AlignItems="AlignItems.Center" Row="true" Spacing="3">
-                <MudText Typo="Typo.h6">KlassText</MudText>
-            </MudStack>
+            <MudLink Href="/">
+                <MudText Class="text-white" Typo="Typo.h6">KlassText</MudText>
+            </MudLink>
         </MudDrawerHeader>
         <NavMenu/>
     </MudDrawer>
@@ -36,7 +34,7 @@
     private bool DrawerOpen = true;
     private void DrawerToggle() => DrawerOpen = !DrawerOpen;
     
-    public static readonly MudTheme Theme = new()
+    public readonly MudTheme Theme = new()
     {
         Typography = new Typography
         {
@@ -44,6 +42,23 @@
             {
                 FontFamily = ["Inter", "Helvetica", "sans-serif"]
             }
+        },
+        PaletteDark = new()
+        {
+            Primary = new("#689F38"),
+            Secondary = new("#83000D"),
+            Background = new("#151515"),
+            Surface = new("222"),
+            AppbarBackground = new("#151515"),
+            DrawerBackground = new("#090909"),
+            BackgroundGrey = new("#151515"),
+            TextPrimary = new("#fefefe"),
+            TextSecondary = new("#757575"),
+            OverlayDark = new("rgba(0, 0, 0, .9)")
+        },
+        LayoutProperties = new()
+        {
+            DefaultBorderRadius = "10px"
         }
     };
 

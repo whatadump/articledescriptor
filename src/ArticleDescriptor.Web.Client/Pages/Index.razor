@@ -1,6 +1,39 @@
 ﻿@page "/"
-<h3>Index</h3>
+@using Size = MudBlazor.Size
+@using Align = MudBlazor.Align
+@layout GuestLayout
 
-@code {
+<style>
+    .main-container{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: calc(100vh - 64px);
+        background: url('back.png') center;
+        background-size: cover;
+        justify-content: center;
+        align-items: center;
+    }
     
-}
+    .run{
+        padding: 10px 20px;
+        font-size: 30px;
+        border-radius: 20px;
+        border: 1px solid white;
+        margin-top: 50px;
+        transition: .1s;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .run:hover{
+        background: white;
+        color: black;
+    }
+</style>
+
+<div class="main-container">
+    <MudText Typo="Typo.h1" Align="Align.Center" Class="fw-bold">KlassText</MudText>
+    <MudText Typo="Typo.h3" Align="Align.Center">Распознаем ваш текст или новостную ленту</MudText>
+    <a href="/onetimes" class="run">Поехали</a>
+</div>

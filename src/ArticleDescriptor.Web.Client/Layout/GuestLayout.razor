@@ -1,0 +1,19 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemingProvider IsDarkMode="true" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout Class="text-white" data-bs-theme="dark">
+    <MudAppBar Elevation="0">
+        <MudContainer>
+            <MudLink Href="/">
+                        <MudText Class="text-white" Typo="Typo.h6">KlassText</MudText>
+                    </MudLink>
+        </MudContainer>
+    </MudAppBar>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>

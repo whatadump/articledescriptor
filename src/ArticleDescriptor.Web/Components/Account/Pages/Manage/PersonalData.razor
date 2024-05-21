@@ -13,13 +13,15 @@
         <p>
             <strong>Удаление данных нельзя обратить.</strong>
         </p>
-        <form action="Account/Manage/DownloadPersonalData" method="post">
-            <AntiforgeryToken />
-            <button class="btn btn-primary" type="submit">Скачать</button>
-        </form>
-        <p>
-            <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">Удалить</a>
-        </p>
+        <div class="d-flex flex-row gap-3">
+           <form action="Account/Manage/DownloadPersonalData" method="post">
+               <AntiforgeryToken />
+               <button class="btn btn-primary" type="submit">Скачать</button>
+           </form>
+           <p>
+               <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">Удалить</a>
+           </p> 
+        </div>
     </div>
 </div>
 

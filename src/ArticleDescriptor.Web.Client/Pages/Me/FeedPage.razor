@@ -6,6 +6,7 @@
 @using ArticleDescriptor.Infrastructure.Utils
 @using ArticleDescriptor.Web.Client.Utils
 @using Microsoft.EntityFrameworkCore
+@using Color = MudBlazor.Color
 @attribute [Authorize]
 
 @inject IFeedService FeedService
@@ -75,7 +76,7 @@
                                 <MudTd>
                                     @if (context.IsError)
                                     {
-                                        <MudIconButton OnClick="@(async () => await DeleteClick(context))" Icon="@Icons.Material.Filled.Delete"/>
+                                        <MudIconButton OnClick="@(async () => await DeleteClick(context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete"/>
                                     }
                                 </MudTd>
                             </RowTemplate>
