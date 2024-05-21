@@ -34,14 +34,14 @@ public partial class OneTimeService : IOneTimeService
             return "Ошибка: передана пустая строка";
         }
         
-        var sanitizedText = _sanitizer.Sanitize(htmlText);
+        var sanitizedText = _sanitizer.Sanitize(htmlText); // Очищаем html текст
             
         var tokens = StringFilteringRegex()
             .Replace(sanitizedText, string.Empty)
             .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-            .Take(DefaultTextWordsCount);
+            .Take(DefaultTextWordsCount); // Разделяем на слова
 
-        var filteredText = string.Join(" ", tokens);
+        var filteredText = string.Join(" ", tokens); // Собираем строку из слов
 
         if (string.IsNullOrEmpty(filteredText))
         {
@@ -54,7 +54,7 @@ public partial class OneTimeService : IOneTimeService
             Text = htmlText,
             NormalizedText = filteredText
         };
-        await _context.OneTimeEntries.AddAsync(entry);
+        await _context.OneTimeEntries.AddAsync(entry); // Сохраняем запись
         await _context.SaveChangesAsync();
         return null;
     }

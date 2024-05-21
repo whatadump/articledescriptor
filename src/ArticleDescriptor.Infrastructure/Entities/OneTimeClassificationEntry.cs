@@ -7,6 +7,9 @@ using Enums;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// Простой текст пользователя
+/// </summary>
 [PrimaryKey(nameof(Id))]
 [Table("onetime_classification_entries")]
 public class OneTimeClassificationEntry : IClassifiable

@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+//Сервис аналогичен ClassificationHostedService, смотри там
 public class OneTimeClassificationHostedService : IHostedService
 {
     private readonly ILogger<OneTimeClassificationHostedService> _logger;

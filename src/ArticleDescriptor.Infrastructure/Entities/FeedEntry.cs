@@ -7,6 +7,7 @@ using Enums;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
 
+// Пост в ленте
 [PrimaryKey(nameof(Id))]
 [Table("classification_entries")]
 public class FeedEntry : IClassifiable

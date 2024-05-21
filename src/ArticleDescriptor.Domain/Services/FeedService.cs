@@ -1,7 +1,11 @@
 ﻿namespace ArticleDescriptor.Domain.Services;
 
+using System;
 using System.Collections.Frozen;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using CodeHollow.FeedReader;
 using Ganss.Xss;
 using Infrastructure;
@@ -10,6 +14,9 @@ using Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
+/// <summary>
+/// Сервис для работы с лентой
+/// </summary>
 public partial class FeedService : IFeedService
 {
     private readonly ApplicationDbContext _context;
@@ -19,9 +26,9 @@ public partial class FeedService : IFeedService
     private const int DefaultTextWordsCount = 200;
     
     public FeedService(
-        ApplicationDbContext context, 
-        ILogger<FeedService> logger, 
-        IHtmlSanitizer sanitizer)
+        ApplicationDbContext context, // Контекст базы (подключение)
+        ILogger<FeedService> logger, // Логгер
+        IHtmlSanitizer sanitizer) // Очиститель HTML
     {
         _context = context;
         _logger = logger;
@@ -36,7 +43,7 @@ public partial class FeedService : IFeedService
         }
 
         return await _context.FeedSources
-            .Where(x => x.User.Id == user.Id)
+            .Where(x => x.User.Id == user.Id) // Достаем все ленты для данного пользователя
             .ToArrayAsync();
     }
     
@@ -72,14 +79,14 @@ public partial class FeedService : IFeedService
     {
         try
         {
-            var feed = await FeedReader.ReadAsync(path);
+            var feed = await FeedReader.ReadAsync(path); // Читаем из ленты
             var items = feed.Items.Count;
             _logger.LogInformation($"Удалось распознать {items} элементов фида");
-            return true;
+            return true; // Если дошло до сюда, лента валидна
         }
         catch (Exception)
         {
-            return false;
+            return false; // Если упало исключение - лента не валидна
         }
     }
 
@@ -91,7 +98,7 @@ public partial class FeedService : IFeedService
         }
 
         return await _context.FeedEntries
-            .Where(x => x.FeedSource.Id == source.Id)
+            .Where(x => x.FeedSource.Id == source.Id) // Достаем из базы все записи конкретной ленты
             .ToListAsync();
     }
 
@@ -102,17 +109,17 @@ public partial class FeedService : IFeedService
             return [];
         }
         
-        var existingLinks = (await GetExistingFeedEntries(source))
+        var existingLinks = (await GetExistingFeedEntries(source)) // Получаем все записи для выбранной ленты, помещаем в "замороженную" кучу
             .Select(x => x.SourceArticleId)
             .ToFrozenSet();
         
-        var feed = await FeedReader.ReadAsync(source.RssSource);
+        var feed = await FeedReader.ReadAsync(source.RssSource); // Загружаем все записи ленты
         _logger.LogInformation($"Получены {feed.Items.Count} записей");
 
         var addableFeedItems = feed.Items
-            .Where(item => !existingLinks.Contains(item.Link))
-            .Where(item => !string.IsNullOrEmpty(item.Description ?? item.Content))
-            .Take(count);
+            .Where(item => !existingLinks.Contains(item.Link)) // Выбираем те из них которые еще не обработаны
+            .Where(item => !string.IsNullOrEmpty(item.Description ?? item.Content)) // И не содержат пустой контент
+            .Take(count); // Выбираем указанное количество (3)
 
         var newEntries = new List<FeedEntry>(count);
 
@@ -125,18 +132,18 @@ public partial class FeedService : IFeedService
                 FeedSource = source
             };
             
-            var sanitizedText =
+            var sanitizedText = // Тут будет лежать чистый текст
                 _sanitizer
                     .Sanitize(item.Description ?? item.Content);
             
             var tokens = StringFilteringRegex()
                     .Replace(sanitizedText, string.Empty)
                     .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                    .Take(DefaultTextWordsCount);
+                    .Take(DefaultTextWordsCount); // Разделяем на слова 
 
-            newFeedEntry.Text = string.Join(" ", tokens);
+            newFeedEntry.Text = string.Join(" ", tokens); // и собираем обратно
 
-            await _context.FeedEntries.AddAsync(newFeedEntry);
+            await _context.FeedEntries.AddAsync(newFeedEntry); // Сохраняем запись ленты
             newEntries.Add(newFeedEntry);
         }
         
@@ -158,6 +165,6 @@ public partial class FeedService : IFeedService
         return true;
     }
 
-    [GeneratedRegex(@"[^\w ]", RegexOptions.Compiled)]
+    [GeneratedRegex(@"[^\w ]", RegexOptions.Compiled)] // '\w ' означает - буквы и пробел 
     private static partial Regex StringFilteringRegex();
 }

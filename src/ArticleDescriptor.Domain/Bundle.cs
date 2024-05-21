@@ -13,9 +13,9 @@
     {
         public static IServiceCollection UseDomainServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddHostedService<MigratorHostedService>();
-            services.AddHostedService<ClassificationHostedService>();
-            services.AddHostedService<OneTimeClassificationHostedService>();
+            services.AddHostedService<MigratorHostedService>(); // Мигратор
+            services.AddHostedService<ClassificationHostedService>(); // Фоновая задача распознавания записей ленты
+            services.AddHostedService<OneTimeClassificationHostedService>(); // Фоновая задача распознавания простых текстов
             
             services.AddTransient<IFeedService, FeedService>();
             services.AddTransient<IOneTimeService, OneTimeService>();

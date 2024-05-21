@@ -5,7 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
-public class ApplicationUser : IdentityUser
+// Пользователь приложения
+public class ApplicationUser : IdentityUser // <-- Вот тут лежат все остальные столбцы
 {
     [Column("real_name")]
     [Required]
