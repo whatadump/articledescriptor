@@ -1,7 +1,6 @@
 ﻿namespace ArticleDescriptor.Infrastructure.Models;
 
 using System.Text.Json.Serialization;
-using Enums;
 
 public class ClassifyRequestModel
 {

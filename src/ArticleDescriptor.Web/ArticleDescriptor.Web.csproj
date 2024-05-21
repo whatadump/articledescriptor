@@ -23,6 +23,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\ArticleDescriptor.Domain\ArticleDescriptor.Domain.csproj" />
     <ProjectReference Include="..\ArticleDescriptor.Migrations\ArticleDescriptor.Migrations.csproj" />
     <ProjectReference Include="..\ArticleDescriptor.Web.Client\ArticleDescriptor.Web.Client.csproj" />
   </ItemGroup>

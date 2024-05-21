@@ -1,9 +1,6 @@
-using System.Globalization;
-using ArticleDescriptor.Application;
+using ArticleDescriptor.Domain;
 using ArticleDescriptor.Infrastructure;
 using ArticleDescriptor.Infrastructure.Entities;
-using ArticleDescriptor.Infrastructure.Enums;
-using ArticleDescriptor.Infrastructure.Models;
 using ArticleDescriptor.Web.Client;
 using ArticleDescriptor.Web.Client.Layout;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -23,7 +20,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddMudServices();
 
-builder.Services.UseBusinessApplication(builder.Configuration);
+builder.Services.UseInfrastructureServices(builder.Configuration);
+builder.Services.UseDomainServices(builder.Configuration);
 builder.Services.UseInteractiveApplication(builder.Configuration);
 
 builder.Services.AddCascadingAuthenticationState();

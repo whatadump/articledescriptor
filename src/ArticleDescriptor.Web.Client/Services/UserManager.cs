@@ -4,6 +4,9 @@ using Infrastructure.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
+/// <summary>
+/// Получает текущего пользователя
+/// </summary>
 public class UserManager
 {
     private IHttpContextAccessor _accessor;

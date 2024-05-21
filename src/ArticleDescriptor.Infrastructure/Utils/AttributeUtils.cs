@@ -1,6 +1,5 @@
 ﻿namespace ArticleDescriptor.Infrastructure.Utils;
 
-using System.ComponentModel;
 using Attributes;
 
 public static class AttributeUtils

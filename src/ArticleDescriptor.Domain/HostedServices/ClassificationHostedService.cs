@@ -7,7 +7,6 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Infrastructure;
-using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;

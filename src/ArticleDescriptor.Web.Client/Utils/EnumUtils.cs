@@ -5,6 +5,9 @@ using MudBlazor;
 
 public static class EnumUtils
 {
+    /// <summary>
+    /// Преобразует статус классификации в соответствующий цвет
+    /// </summary>
     public static Color ToColor(this ClassificationStatus? status)
     {
         return status switch
