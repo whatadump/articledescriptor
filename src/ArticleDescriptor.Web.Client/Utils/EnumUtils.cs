@@ -5,7 +5,7 @@ using MudBlazor;
 
 public static class EnumUtils
 {
-    public static Color ToColor(this ClassificationStatus status)
+    public static Color ToColor(this ClassificationStatus? status)
     {
         return status switch
         {

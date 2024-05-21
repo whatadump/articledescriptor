@@ -5,8 +5,13 @@ using Interfaces;
 
 public static class ClassificationUtils
 {
-    public static ClassificationStatus GetStatus<T>(this T entity) where T : IClassifiable
+    public static ClassificationStatus? GetStatus<T>(this T? entity) where T : IClassifiable
     {
+        if (entity is null)
+        {
+            return null;
+        }
+        
         if (entity.IsError)
         {
             return ClassificationStatus.ClassificationError;

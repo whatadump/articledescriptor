@@ -1,0 +1,74 @@
+﻿@page "/onetime/{id?}"
+@using System.Globalization
+@using ArticleDescriptor.Infrastructure.Enums
+@using ArticleDescriptor.Infrastructure.Interfaces
+@using ArticleDescriptor.Infrastructure.Utils
+@using Color = MudBlazor.Color
+@inject NavigationManager Navigator
+@inject IOneTimeService OneTimeService
+
+<MudGrid Class="mt-5">
+    <MudItem xs="12" md="4">
+        <MudCard>
+            <MudCardContent>
+                <h4>Автор: @(_entry?.User?.RealName ?? "Анонимный автор")</h4>
+            </MudCardContent>
+            <MudCardActions>
+                @if (_entry?.GetStatus() != ClassificationStatus.ClassificationCompleted)
+                {
+                    <MudChip Variant="Variant.Outlined" Color="@StatusToColor(_entry?.GetStatus())">@(_entry.GetStatus()?.GetMemberName())</MudChip>
+                }
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" md="6">
+        <MudCard>
+            <MudCardHeader Class="fw-bold">
+                Текст, введенный пользователем
+            </MudCardHeader>
+            <MudCardContent>
+                @((MarkupString)(_entry?.Text ?? string.Empty))
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public string? id
+    {
+        get => _id?.ToString();
+        set => _id = long.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : null;
+    }
+
+    private long? _id { get; set; }
+
+    private OneTimeClassificationEntry? _entry;
+
+    private static Color StatusToColor(ClassificationStatus? status)
+    {
+        return status switch
+        {
+            ClassificationStatus.ClassificationError => Color.Error,
+            ClassificationStatus.ClassificationCompleted => Color.Success,
+            _ => Color.Primary
+        };
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (_id is null)
+            {
+                Navigator.NavigateTo("/404", true);
+                return;
+            }
+
+            _entry = await OneTimeService.GetEntryById(_id);
+            StateHasChanged();
+        }
+    }
+
+}

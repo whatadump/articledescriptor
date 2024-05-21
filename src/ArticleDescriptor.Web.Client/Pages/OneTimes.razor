@@ -1,0 +1,74 @@
+﻿@page "/onetimes"
+@using ArticleDescriptor.Infrastructure.Interfaces
+@using ArticleDescriptor.Infrastructure.Utils
+@using Ganss.Xss
+@using ArticleDescriptor.Infrastructure.Enums
+@using ArticleDescriptor.Web.Client.Utils
+
+@inject IOneTimeService OneTimeService
+@inject IHtmlSanitizer Sanitizer
+
+<h3 class="mt-5">Тексты пользователей</h3>
+
+<MudTable Class="mt-5" T="OneTimeClassificationEntry" Items="_entries">
+    <HeaderContent>
+        <MudTh>
+            Отрывок
+        </MudTh>
+        <MudTh>
+            Автор
+        </MudTh>
+        <MudTh>
+            Ссылка
+        </MudTh>
+        <MudTh>
+            Статус распознавания
+        </MudTh>
+        <MudTh>
+            Результат распозавания
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>
+            @(GetExcerpt(context.Text))...
+        </MudTd>
+        <MudTd>
+            @(context.User?.RealName ?? "Анонимный автор")
+        </MudTd>
+        <MudTd>
+            <MudLink Href="@($"/onetime/{context.Id}")">Ссылка...</MudLink>
+        </MudTd>
+         <MudTd>
+            <MudChip Color="@context.GetStatus().ToColor()">@((context.GetStatus() ?? ClassificationStatus.Idle).GetMemberName())</MudChip>
+        </MudTd>
+        <MudTd>
+            @if (context is { ClassificationCompleted: true, ClassificationResult: not null })
+            {
+                <MudChip>@context.ClassificationResult.Value.GetMemberName()</MudChip>
+            }
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+
+
+@code {
+
+    private IReadOnlyCollection<OneTimeClassificationEntry>? _entries;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _entries = await OneTimeService.GetAllEntries();
+            StateHasChanged();
+        }
+    }
+
+    private string GetExcerpt(string html)
+    {
+        var sanitized = Sanitizer.Sanitize(html);
+        return string.Join(" ", sanitized.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(20));
+    }
+
+}

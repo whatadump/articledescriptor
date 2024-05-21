@@ -3,7 +3,7 @@
 
 @inject NavigationManager Navigation
 
-<MudThemingProvider Theme="Theme" IsDarkMode="false" />
+<MudThemingProvider Theme="Theme" IsDarkMode="true" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -16,22 +16,13 @@
         </MudText>
         <MudSpacer/>
         <AuthorizeView>
-            <MudMenu>
-                <ActivatorContent>
-                    <MudAvatar Variant="Variant.Outlined">
-                        <MudIcon Icon="@Icons.Material.Filled.Person"></MudIcon>
-                    </MudAvatar>
-                </ActivatorContent>
-                <ChildContent>
-                    <MudMenuItem><MudLink Href="/Account/Logout">Выйти</MudLink></MudMenuItem>
-                </ChildContent>
-            </MudMenu>
+            <MudMenuItem><MudLink Href="/Account/Logout">Выйти</MudLink></MudMenuItem>
         </AuthorizeView>
     </MudAppBar>
     <MudDrawer @bind-Open="DrawerOpen" Elevation="2">
         <MudDrawerHeader Style="padding-left: 16px">
             <MudStack AlignItems="AlignItems.Center" Row="true" Spacing="3">
-                <MudText Typo="Typo.h6">Kuso4</MudText>
+                <MudText Typo="Typo.h6">KlassText</MudText>
             </MudStack>
         </MudDrawerHeader>
         <NavMenu/>

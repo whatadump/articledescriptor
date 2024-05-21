@@ -55,16 +55,16 @@
                                 <MudTh>
                                     
                                 </MudTh>
-                            </HeaderContent>
+                            </HeaderContent>    
                             <RowTemplate>
                                 <MudTd>
-                                    @($"{context.Title[..30]}...")
+                                    @($"{context?.Title?[..int.Min(context.Title.Length, 30)]}...")
                                 </MudTd>
                                 <MudTd>
                                     <MudLink Target="_blank" Href="@context.SourceArticleId">Ссылка...</MudLink>
                                 </MudTd>
                                 <MudTd>
-                                    <MudChip Color="@_statuses[context.Id].ToColor()">@_statuses[context.Id].GetMemberName()</MudChip>
+                                    <MudChip Color="@context.GetStatus().ToColor()">@((context.GetStatus() ?? ClassificationStatus.Idle).GetMemberName())</MudChip>
                                 </MudTd>
                                 <MudTd>
                                     @if (context is { ClassificationCompleted: true, ClassificationResult: not null })
@@ -97,16 +97,13 @@
     private ApplicationUser _user { get; set; }
 
     private ICollection<FeedEntry> _entries { get; set; }
-
-    private Dictionary<long, ClassificationStatus> _statuses;
-
+    
     private bool _loading;
     
     private async Task UpdateData()
     {
         _loading = true;
         _entries = await FeedService.GetExistingFeedEntries(_feed);
-        _statuses = _entries.ToDictionary(x => x.Id, x => x.GetStatus());
         _loading = false;
         StateHasChanged();
     }
@@ -142,6 +139,8 @@
                     _feed = feed;
                 }
             }
+            
+            
 
             await UpdateData();
             

@@ -7,7 +7,6 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Infrastructure;
-using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +15,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-public class ClassificationHostedService : IHostedService
+public class OneTimeClassificationHostedService : IHostedService
 {
-    private readonly ILogger<ClassificationHostedService> _logger;
+    private readonly ILogger<OneTimeClassificationHostedService> _logger;
 
     private readonly IServiceProvider _rootProvider;
 
@@ -26,15 +25,15 @@ public class ClassificationHostedService : IHostedService
 
     private const int DefaultDelayTimeMs = 20000;
 
-    public ClassificationHostedService(
-        ILogger<ClassificationHostedService> logger, 
+    public OneTimeClassificationHostedService(
+        ILogger<OneTimeClassificationHostedService> logger, 
         IServiceProvider rootProvider, 
         IOptions<ClassifierOptions> options)
     {
         _logger = logger;
         _rootProvider = rootProvider;
         _options = options;
-        
+
         _logger.LogWarning($"Данные конфигурации: {_options.Value.Endpoint}");
     }
 
@@ -57,7 +56,7 @@ public class ClassificationHostedService : IHostedService
         {
             try
             {
-                var unclassifiedEntries = await context.FeedEntries
+                var unclassifiedEntries = await context.OneTimeEntries
                     .Where(x => !x.ClassificationCompleted)
                     .Where(x => !x.IsError)
                     .Take(10)
@@ -69,22 +68,22 @@ public class ClassificationHostedService : IHostedService
                     continue;
                 }
 
-                foreach (var feedEntry in unclassifiedEntries)
+                foreach (var oneTimeEntry in unclassifiedEntries)
                 {
-                    _logger.LogWarning($"Отправляем запрос на распознавание ID: {feedEntry.Id}");
+                    _logger.LogWarning($"Отправляем запрос на распознавание ID: {oneTimeEntry.Id}");
 
-                    if (string.IsNullOrEmpty(feedEntry.Text))
+                    if (string.IsNullOrEmpty(oneTimeEntry.Text))
                     {
-                        _logger.LogError($"Пустой текст для EntryID: {feedEntry.Id}. Запись помечена как ошибка");
-                        feedEntry.IsError = true;
-                        context.FeedEntries.Update(feedEntry);
+                        _logger.LogError($"Пустой текст для EntryID: {oneTimeEntry.Id}. Запись помечена как ошибка");
+                        oneTimeEntry.IsError = true;
+                        context.OneTimeEntries.Update(oneTimeEntry);
                         await context.SaveChangesAsync(cancellationToken);
                         continue;
                     }
                     
                     var response = await client.PostAsJsonAsync(endpoint, new ClassifyRequestModel
                     {
-                        Text = feedEntry.Text
+                        Text = oneTimeEntry.NormalizedText
                     }, cancellationToken: cancellationToken);
                     
                     _logger.LogInformation("Распознавание завершено");
@@ -111,10 +110,10 @@ public class ClassificationHostedService : IHostedService
                         continue;
                     }
 
-                    feedEntry.ClassificationCompleted = true;
-                    feedEntry.ClassificationTime = DateTime.UtcNow;
-                    feedEntry.ClassificationResult = result.Result;
-                    context.FeedEntries.Update(feedEntry);
+                    oneTimeEntry.ClassificationCompleted = true;
+                    oneTimeEntry.ClassificationTime = DateTime.UtcNow;
+                    oneTimeEntry.ClassificationResult = result.Result;
+                    context.OneTimeEntries.Update(oneTimeEntry);
                     await context.SaveChangesAsync(cancellationToken);
                 }
             }

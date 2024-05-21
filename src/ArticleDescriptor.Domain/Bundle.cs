@@ -15,6 +15,7 @@
         {
             services.AddHostedService<MigratorHostedService>();
             services.AddHostedService<ClassificationHostedService>();
+            services.AddHostedService<OneTimeClassificationHostedService>();
             
             services.AddTransient<IFeedService, FeedService>();
             services.AddTransient<IOneTimeService, OneTimeService>();

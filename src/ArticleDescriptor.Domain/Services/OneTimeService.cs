@@ -1,10 +1,15 @@
 ﻿namespace ArticleDescriptor.Domain.Services;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Ganss.Xss;
 using Infrastructure;
 using Infrastructure.Entities;
 using Infrastructure.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 public partial class OneTimeService : IOneTimeService
@@ -53,7 +58,32 @@ public partial class OneTimeService : IOneTimeService
         await _context.SaveChangesAsync();
         return null;
     }
-    
+
+    Task<IReadOnlyCollection<OneTimeClassificationEntry>> IOneTimeService.GetAllEntries()
+    {
+        return GetAllEntries();
+    }
+
+    public async Task<OneTimeClassificationEntry?> GetEntryById(long? id)
+    {
+        if (id is null)
+        {
+            return null;
+        }
+
+        return await _context.OneTimeEntries.SingleOrDefaultAsync(x => x.Id == id);
+    }
+
+    Task<string?> IOneTimeService.SaveOneTimeEntry(string htmlText, ApplicationUser? user)
+    {
+        return SaveOneTimeEntry(htmlText, user);
+    }
+
+    public async Task<IReadOnlyCollection<OneTimeClassificationEntry>> GetAllEntries()
+    {
+        return await _context.OneTimeEntries.ToArrayAsync();
+    }
+
     [GeneratedRegex(@"[^\w ]", RegexOptions.Compiled)]
     private static partial Regex StringFilteringRegex();
 }
